@@ -1,7 +1,7 @@
 import unittest
-
+import numpy as np
 from fastapi.testclient import TestClient
-from challenge import app
+from challenge.api import app
 
 
 class TestBatchPipeline(unittest.TestCase):
@@ -18,10 +18,11 @@ class TestBatchPipeline(unittest.TestCase):
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0])) # change this line to the model of chosing
+        #when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0])) # change this line to the model of chosing
         response = self.client.post("/predict", json=data)
-        self.assertEqual(response.status_code, 200)
+        #response = self.client.get("/")#, json=data)
         self.assertEqual(response.json(), {"predict": [0]})
+        self.assertEqual(response.status_code, 200)
     
 
     def test_should_failed_unkown_column_1(self):
