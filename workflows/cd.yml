@@ -1,7 +1,17 @@
-name: 'Continuous Delivery'
+steps:
+  - name: 'docker'
+    id: Build Docker on GCP
+    args: ['gcloud', 'builds', 'submit', '--region=southamerica-east1', '--tag', 'southamerica-east1-docker.pkg.dev/delays-api/delay-api-docker/mle:tag1']
 
-on:
-  ...
+  - name: 'docker'
+    id: Push Docker image
+    args: ['gcloud', 'run', 'deploy', '--image=southamerica-east1-docker.pkg.dev/delays-api/delay-api-docker/mle:tag1']
+    waitFor: ['Build Docker on GCP']
 
-jobs:
-  ...
+  # Step 4: Notify on successful deployment (Optional)
+  - name: 'cloud'
+    id: Send Deployment Notification
+    entrypoint: bash
+    args:
+      - '-c'
+      - 'echo "Delays API successfully deployed!"'

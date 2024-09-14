@@ -1,7 +1,31 @@
-name: 'Continuous Integration'
+steps:
+  
+  - name: 'python:3.7'
+    id: Install dependencies
+    entrypoint: 'pip'
+    args: ['install', '-r', 'requirements.txt']
+  
+  - name: 'python:3.7'
+    id: Install test dependencies
+    entrypoint: 'pip'
+    args: ['install', '-r', 'test-requirements.txt']
+    waitFor: ['Install dependencies']
 
-on:
-  ...
+  - name: 'python:3.7'
+    id: Install dev dependencies
+    entrypoint: 'pip'
+    args: ['install', '-r', 'dev-requirements.txt']
+    waitFor: ['Install test dependencies']
 
-jobs:
-  ...
+  - name: 'python:3.7'
+    id: Run tests
+    entrypoint: 'pytest'
+    args: ['--cov=./', '--cov-report=xml']
+    waitFor: ['Install dev dependencies']
+
+
+
+cache:
+  paths:
+    - /root/.cache/pip
+
