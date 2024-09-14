@@ -2,9 +2,11 @@ from fastapi import FastAPI, HTTPException
 from challenge.model import DelayModel
 import pandas as pd
 import json
+import os
+path = os.path.dirname(os.path.abspath(__package__)) + "/data/data.csv"
 
 dm = DelayModel()
-data = pd.read_csv("data/data.csv")
+data = pd.read_csv(path)
 features, target = dm.preprocess(data, target_column="delay")
 dm.fit(features, target)
 app = FastAPI()
